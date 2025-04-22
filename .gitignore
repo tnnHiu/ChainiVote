@@ -32,6 +32,6 @@ build/
 mvnw
 target
 mvnw.cmd
-
+.gitignore
 ### VS Code ###
 .vscode/
