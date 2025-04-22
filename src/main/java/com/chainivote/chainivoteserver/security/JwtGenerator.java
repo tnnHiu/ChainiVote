@@ -12,8 +12,6 @@ import java.util.Date;
 
 @Component
 public class JwtGenerator {
-
-
     // Khóa bí mật được dùng để ký và xác minh JWT.
     // Có khóa này là có thể tạo hoặc xác minh token.
     private static final SecretKey key = Keys.hmacShaKeyFor(
