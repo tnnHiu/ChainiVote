@@ -12,5 +12,5 @@ public interface UserService {
 
     List<UserResponseDTO> getAllUser();
 
-    ResponseEntity<String> updateWalletAddress(UpdateWalletAddressRequestDTO requestDTO);
+    ResponseEntity<String> updateWalletAddress(String username, UpdateWalletAddressRequestDTO requestDTO);
 }

@@ -25,5 +25,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("UPDATE UserEntity u SET u.walletAddress = :walletAddress WHERE u.username = :username")
     int updateWalletAddress(String username, String walletAddress);
 
-
+    boolean existsByWalletAddress(String walletAddress);
 }

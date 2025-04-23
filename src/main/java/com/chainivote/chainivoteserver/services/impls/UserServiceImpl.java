@@ -42,13 +42,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> updateWalletAddress(UpdateWalletAddressRequestDTO requestDTO) {
-        String username = requestDTO.getUsername();
+    public ResponseEntity<String> updateWalletAddress(String username, UpdateWalletAddressRequestDTO requestDTO) {
         String newWalletAddress = requestDTO.getWalletAddress();
-
         UserEntity user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        if (newWalletAddress != null && userRepository.existsByWalletAddress(newWalletAddress)) {
+            return new ResponseEntity<>("This wallet address is already in use by another user", HttpStatus.BAD_REQUEST);
+        }
         int rowsUpdated = userRepository.updateWalletAddress(username, newWalletAddress);
 
         if (rowsUpdated > 0) {
@@ -57,6 +58,5 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>("Failed to update wallet address", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
 }
