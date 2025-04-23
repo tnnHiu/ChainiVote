@@ -6,6 +6,8 @@ import com.chainivote.chainivoteserver.dtos.request.RegisterRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface AuthService {
+
     AuthResponseDTO login(LoginRequestDTO loginRequestDTO);
+
     ResponseEntity<String> register(RegisterRequestDTO registerRequestDTO);
 }

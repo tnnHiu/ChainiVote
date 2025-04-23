@@ -1,9 +1,8 @@
 package com.chainivote.chainivoteserver.services;
 
-import com.chainivote.chainivoteserver.dtos.request.UpdateWalletAddressRequestDTO;
+import com.chainivote.chainivoteserver.dtos.request.UpdateWaAddrReqDTO;
+import com.chainivote.chainivoteserver.dtos.response.AuthResponseDTO;
 import com.chainivote.chainivoteserver.dtos.response.UserResponseDTO;
-import org.springframework.http.ResponseEntity;
-
 
 import java.util.List;
 
@@ -12,5 +11,5 @@ public interface UserService {
 
     List<UserResponseDTO> getAllUser();
 
-    ResponseEntity<String> updateWalletAddress(String username, UpdateWalletAddressRequestDTO requestDTO);
+    AuthResponseDTO updateWalletAddress(String username, UpdateWaAddrReqDTO requestDTO);
 }

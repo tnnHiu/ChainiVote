@@ -1,14 +1,14 @@
 package com.chainivote.chainivoteserver.services.impls;
 
-import com.chainivote.chainivoteserver.dtos.request.UpdateWalletAddressRequestDTO;
+import com.chainivote.chainivoteserver.dtos.request.UpdateWaAddrReqDTO;
+import com.chainivote.chainivoteserver.dtos.response.AuthResponseDTO;
 import com.chainivote.chainivoteserver.dtos.response.UserResponseDTO;
 import com.chainivote.chainivoteserver.entities.RoleEntity;
 import com.chainivote.chainivoteserver.entities.UserEntity;
 import com.chainivote.chainivoteserver.repositories.UserRepository;
+import com.chainivote.chainivoteserver.security.JwtGenerator;
 import com.chainivote.chainivoteserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, JwtGenerator jwtGenerator) {
         this.userRepository = userRepository;
+        this.jwtGenerator = jwtGenerator;
     }
 
     @Override
@@ -42,21 +44,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> updateWalletAddress(String username, UpdateWalletAddressRequestDTO requestDTO) {
+    public AuthResponseDTO updateWalletAddress(String username, UpdateWaAddrReqDTO requestDTO) {
         String newWalletAddress = requestDTO.getWalletAddress();
-        UserEntity user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (newWalletAddress != null && userRepository.existsByWalletAddress(newWalletAddress)) {
-            return new ResponseEntity<>("This wallet address is already in use by another user", HttpStatus.BAD_REQUEST);
+            throw new IllegalArgumentException("This wallet address is already in use by another user.");
         }
-        int rowsUpdated = userRepository.updateWalletAddress(username, newWalletAddress);
 
-        if (rowsUpdated > 0) {
-            return new ResponseEntity<>("Wallet address updated successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Failed to update wallet address", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        UserEntity user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        user.setWalletAddress(newWalletAddress);
+        userRepository.save(user);
+
+        String roles = user.getRoles().stream()
+                .map(RoleEntity::getName)
+                .collect(Collectors.joining(", "));
+        String newToken = jwtGenerator.generateToken(user.getUsername(), roles, newWalletAddress);
+
+        return new AuthResponseDTO(newToken);
     }
 
 }

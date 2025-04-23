@@ -51,15 +51,16 @@ public class AuthServiceImpl implements AuthService {
         );
         // Lưu authentication vào SecurityContext
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtGenerator.generateToken(authentication);
         UserEntity user = userRepository.findByUsernameWithRoles(loginRequestDTO.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String roles = user.getRoles().stream()
                 .map(RoleEntity::getName)
                 .collect(Collectors.joining(", "));
+        String walletAddress = user.getWalletAddress();
+        String token = jwtGenerator.generateToken(user.getUsername(), roles, walletAddress
+        );
         return new AuthResponseDTO(token);
     }
-
 
     @Override
     public ResponseEntity<String> register(RegisterRequestDTO registerRequestDTO) {

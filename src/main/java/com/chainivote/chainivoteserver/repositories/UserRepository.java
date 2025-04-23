@@ -20,10 +20,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.username = :username")
     Optional<UserEntity> findByUsernameWithRoles(@Param("username") String username);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserEntity u SET u.walletAddress = :walletAddress WHERE u.username = :username")
-    int updateWalletAddress(String username, String walletAddress);
+//    @Transactional
+//    @Modifying
+//    @Query("UPDATE UserEntity u SET u.walletAddress = :walletAddress WHERE u.username = :username")
+//    int updateWalletAddress(String username, String walletAddress);
 
     boolean existsByWalletAddress(String walletAddress);
 }
