@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,29 +37,24 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HttpSession httpSession) throws Exception {
-        return http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        return http.cors(cors -> cors
+                        .configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(
-                        jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class
-                )
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/{pollId}", "/api/poll/{\\d+}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtAuthEntryPoint)
-                )
+                        .authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .build();
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

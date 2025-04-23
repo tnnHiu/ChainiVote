@@ -4,15 +4,12 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Component
 public class JwtGenerator {
@@ -28,8 +25,7 @@ public class JwtGenerator {
                 .subject(username)
                 .claim("roles", roles)
                 .claim("walletAddress", walletAddress)
-                .issuedAt(now)
-                .expiration(expiryDate)
+                .issuedAt(now).expiration(expiryDate)
                 // Ký token với khóa bí mật bằng thuật toán SHA-512.
                 .signWith(key, Jwts.SIG.HS512).compact();
     }

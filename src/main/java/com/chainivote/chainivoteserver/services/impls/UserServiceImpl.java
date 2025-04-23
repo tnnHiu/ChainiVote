@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//Test
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -59,6 +57,7 @@ public class UserServiceImpl implements UserService {
         String roles = user.getRoles().stream()
                 .map(RoleEntity::getName)
                 .collect(Collectors.joining(", "));
+
         String newToken = jwtGenerator.generateToken(user.getUsername(), roles, newWalletAddress);
 
         return new AuthResponseDTO(newToken);
