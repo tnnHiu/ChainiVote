@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         String roles = user.getRoles().stream()
                 .map(RoleEntity::getName)
                 .collect(Collectors.joining(", "));
-        return new AuthResponseDTO(token, user.getUsername(), roles);
+        return new AuthResponseDTO(token);
     }
 
 

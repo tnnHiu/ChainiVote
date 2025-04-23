@@ -4,11 +4,13 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtGenerator {
@@ -20,11 +22,17 @@ public class JwtGenerator {
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
+        String roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         return Jwts.builder()
                 .subject(username)
+                .claim("roles", roles)
                 .issuedAt(now)
                 .expiration(expiryDate)
                 // Ký token với khóa bí mật bằng thuật toán SHA-512.
@@ -40,6 +48,18 @@ public class JwtGenerator {
                     .parseSignedClaims(token);
 
             return jwt.getPayload().getSubject();
+        } catch (JwtException ex) {
+            throw new AuthenticationCredentialsNotFoundException("Invalid JWT token", ex);
+        }
+    }
+
+    public String getRolesFromJWT(String token) {
+        try {
+            Jwt<?, Claims> jwt = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token);
+            return jwt.getPayload().get("roles", String.class);
         } catch (JwtException ex) {
             throw new AuthenticationCredentialsNotFoundException("Invalid JWT token", ex);
         }
