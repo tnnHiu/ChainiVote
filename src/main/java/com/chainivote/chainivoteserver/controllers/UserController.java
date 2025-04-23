@@ -1,23 +1,23 @@
 package com.chainivote.chainivoteserver.controllers;
 
+import com.chainivote.chainivoteserver.dtos.request.UpdateWalletAddressRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.UserResponseDTO;
 import com.chainivote.chainivoteserver.entities.UserEntity;
 import com.chainivote.chainivoteserver.repositories.UserRepository;
 import com.chainivote.chainivoteserver.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -25,10 +25,18 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("isAuthenticated()")
+//    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
         List<UserResponseDTO> users = userService.getAllUser();
         return ResponseEntity.ok(users);
     }
+
+    @PutMapping("/update-wallet")
+    public ResponseEntity<String> updateWalletAddress(
+            @Valid @RequestBody UpdateWalletAddressRequestDTO requestDTO
+    ) {
+        return userService.updateWalletAddress(requestDTO);
+    }
+
 
 }
