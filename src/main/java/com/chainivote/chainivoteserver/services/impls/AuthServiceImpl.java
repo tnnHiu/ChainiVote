@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
                 .map(RoleEntity::getName)
                 .collect(Collectors.joining(", "));
         String walletAddress = user.getWalletAddress();
-        String token = jwtGenerator.generateToken(user.getUsername(), roles, walletAddress
+        String token = jwtGenerator.generateToken(user.getId(), user.getUsername(), roles, walletAddress
         );
         return new AuthResponseDTO(token);
     }

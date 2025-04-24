@@ -17,19 +17,21 @@ public class JwtGenerator {
     // Có khóa này là có thể tạo hoặc xác minh token.
     private static final SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes(StandardCharsets.UTF_8));
 
-    public String generateToken(String username, String roles, String walletAddress) {
+    public String generateToken(long id, String username, String roles, String walletAddress) {
+
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         return Jwts.builder()
                 .subject(username)
+                .claim("uid", id)
                 .claim("roles", roles)
                 .claim("walletAddress", walletAddress)
+
                 .issuedAt(now).expiration(expiryDate)
                 // Ký token với khóa bí mật bằng thuật toán SHA-512.
                 .signWith(key, Jwts.SIG.HS512).compact();
     }
-
 
     public String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");

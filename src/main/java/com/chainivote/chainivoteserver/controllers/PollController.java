@@ -3,6 +3,7 @@ package com.chainivote.chainivoteserver.controllers;
 import com.chainivote.chainivoteserver.dtos.request.PollRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.PollResponseDTO;
 import com.chainivote.chainivoteserver.services.PollService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,8 @@ public class PollController {
     }
 
     @PostMapping("/create-poll")
-    public ResponseEntity<String> createPoll(@RequestBody PollRequestDTO pollRequestDTO) {
+    public ResponseEntity<String> createPoll(
+           @Valid @RequestBody PollRequestDTO pollRequestDTO) {
         return pollService.createPoll(pollRequestDTO);
     }
 

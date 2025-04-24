@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
                 .map(RoleEntity::getName)
                 .collect(Collectors.joining(", "));
 
-        String newToken = jwtGenerator.generateToken(user.getUsername(), roles, newWalletAddress);
+        String newToken = jwtGenerator.generateToken(user.getId(), user.getUsername(), roles, newWalletAddress);
 
         return new AuthResponseDTO(newToken);
     }
