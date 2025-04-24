@@ -75,7 +75,8 @@ public class PollServiceImpl implements PollService {
                         candidate.getId(),
                         candidate.getName(),
                         candidate.getDescription(),
-                        candidate.getUrlImage()
+                        candidate.getUrlImage(),
+                        candidate.getChainId()
                 ))
                 .collect(Collectors.toList());
     }

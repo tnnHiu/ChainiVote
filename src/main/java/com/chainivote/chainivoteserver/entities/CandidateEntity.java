@@ -19,8 +19,12 @@ public class CandidateEntity {
 
     private String urlImage;
 
+    @Column(nullable = false, unique = true)
+    private long chainId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "poll_id", nullable = false)
     private PollEntity poll;
+
 }
 

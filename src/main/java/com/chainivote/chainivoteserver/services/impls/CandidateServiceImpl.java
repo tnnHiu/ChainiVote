@@ -27,7 +27,8 @@ public class CandidateServiceImpl implements CandidateService {
                         candidate.getId(),
                         candidate.getName(),
                         candidate.getDescription(),
-                        candidate.getUrlImage()
+                        candidate.getUrlImage(),
+                        candidate.getChainId()
                 ));
     }
 
@@ -41,7 +42,8 @@ public class CandidateServiceImpl implements CandidateService {
                 candidate.getId(),
                 candidate.getName(),
                 candidate.getDescription(),
-                candidate.getUrlImage()
+                candidate.getUrlImage(),
+                candidate.getChainId()
         ));
     }
 
