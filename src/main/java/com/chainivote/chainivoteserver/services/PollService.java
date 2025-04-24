@@ -1,9 +1,11 @@
 package com.chainivote.chainivoteserver.services;
 
 
+import com.chainivote.chainivoteserver.dtos.request.PollRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.PollResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 
 public interface PollService {
@@ -14,6 +16,6 @@ public interface PollService {
 
     Page<PollResponseDTO> getAllPollWithoutCandidate(Pageable pageable);
 
-//    ResponseEntity<String> createPoll(Po pollResponseDTO);
+    ResponseEntity<String> createPoll(PollRequestDTO pollRequestDTO);
 
 }

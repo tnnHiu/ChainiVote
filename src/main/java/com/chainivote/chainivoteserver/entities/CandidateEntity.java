@@ -1,11 +1,16 @@
 package com.chainivote.chainivoteserver.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "candidate")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CandidateEntity {
 
     @Id
@@ -27,4 +32,5 @@ public class CandidateEntity {
     private PollEntity poll;
 
 }
+
 

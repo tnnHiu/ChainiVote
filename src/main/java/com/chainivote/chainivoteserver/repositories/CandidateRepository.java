@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CandidateRepository extends JpaRepository<CandidateEntity, Long> {
 
-
     Page<CandidateEntity> findAll( Pageable pageable);
 
 
