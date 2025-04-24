@@ -34,8 +34,14 @@ public class PollController {
         return pollService.getAllPoll(pageable);
     }
 
+    @GetMapping("/get-all-without-candidate")
+    public Page<PollResponseDTO> getAllPollsWithoutCandidate(
+            @PageableDefault(size = 2) Pageable pageable
+    ) {
+        return pollService.getAllPollWithoutCandidate(pageable);
+    }
+
     // Tạo Pageable cố định: chỉ hiển thị 2 phần tử trên mỗi trang
     // PageRequest fixedPageable = PageRequest.of(0, 2); // Luôn trang 0, size = 2
-
 
 }

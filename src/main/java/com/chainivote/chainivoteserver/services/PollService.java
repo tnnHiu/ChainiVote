@@ -11,4 +11,5 @@ public interface PollService {
 
     Page<PollResponseDTO> getAllPoll(Pageable pageable);
 
+    Page<PollResponseDTO> getAllPollWithoutCandidate(Pageable pageable);
 }

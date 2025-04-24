@@ -43,10 +43,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/{pollId}", "/api/poll/{\\d+}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                        .requestMatchers(HttpMethod.GET, "/api/poll/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/candidate/**").permitAll()
+                        .anyRequest().authenticated()).addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session

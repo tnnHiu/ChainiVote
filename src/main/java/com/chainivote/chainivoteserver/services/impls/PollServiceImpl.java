@@ -37,6 +37,23 @@ public class PollServiceImpl implements PollService {
                 .map(this::mapToPollResponseDTO);
     }
 
+    @Override
+    public Page<PollResponseDTO> getAllPollWithoutCandidate(Pageable pageable) {
+        return pollRepository.findAll(pageable)
+                .map(poll -> new PollResponseDTO(
+                        poll.getId(),
+                        poll.getTitle(),
+                        poll.getDescription(),
+                        poll.getUrlImage(),
+                        poll.getChainId(),
+                        poll.getStatus(),
+                        poll.getStartTime(),
+                        poll.getEndTime(),
+                        null
+                ));
+
+    }
+
     private PollResponseDTO mapToPollResponseDTO(PollEntity poll) {
         return new PollResponseDTO(
                 poll.getId(),
@@ -50,6 +67,7 @@ public class PollServiceImpl implements PollService {
                 mapCandidatesToDTO(poll.getCandidates())
         );
     }
+
 
     private List<CandidateResponseDTO> mapCandidatesToDTO(List<CandidateEntity> candidates) {
         return candidates.stream()
