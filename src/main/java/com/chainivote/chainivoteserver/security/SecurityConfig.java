@@ -43,7 +43,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/get-all-without-candidate").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/create-poll").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/poll/{pollId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/candidate/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)

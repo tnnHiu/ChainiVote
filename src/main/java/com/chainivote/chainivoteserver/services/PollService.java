@@ -18,4 +18,6 @@ public interface PollService {
 
     ResponseEntity<String> createPoll(PollRequestDTO pollRequestDTO);
 
+    Page<PollResponseDTO> getAllPollByUser(long uid, Pageable pageable);
+
 }

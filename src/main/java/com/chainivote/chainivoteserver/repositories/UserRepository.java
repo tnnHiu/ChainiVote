@@ -1,6 +1,5 @@
 package com.chainivote.chainivoteserver.repositories;
 
-
 import com.chainivote.chainivoteserver.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

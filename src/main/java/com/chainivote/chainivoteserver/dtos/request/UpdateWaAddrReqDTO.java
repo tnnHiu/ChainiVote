@@ -9,5 +9,4 @@ public class UpdateWaAddrReqDTO {
     @NotBlank(message = "walletAddress is required")
     private String walletAddress;
 
-
 }

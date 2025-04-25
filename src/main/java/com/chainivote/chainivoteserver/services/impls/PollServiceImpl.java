@@ -1,6 +1,5 @@
 package com.chainivote.chainivoteserver.services.impls;
 
-
 import com.chainivote.chainivoteserver.dtos.request.PollRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.CandidateResponseDTO;
 import com.chainivote.chainivoteserver.dtos.response.PollResponseDTO;
@@ -67,6 +66,22 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    public Page<PollResponseDTO> getAllPollByUser(long uid, Pageable pageable) {
+            Page<PollEntity> polls = pollRepository.findAllPollsByCreator_Id(uid, pageable);
+            return polls.map(poll -> new PollResponseDTO(
+                    poll.getId(),
+                    poll.getTitle(),
+                    poll.getDescription(),
+                    poll.getUrlImage(),
+                    poll.getChainId(),
+                    poll.getStatus(),
+                    poll.getStartTime(),
+                    poll.getEndTime(),
+                    null
+            ));
+    }
+
+    @Override
     public ResponseEntity<String> createPoll(PollRequestDTO pollRequestDTO) {
         try {
 
@@ -121,7 +136,6 @@ public class PollServiceImpl implements PollService {
                 mapCandidatesToDTO(poll.getCandidates())
         );
     }
-
 
     private List<CandidateResponseDTO> mapCandidatesToDTO(List<CandidateEntity> candidates) {
         return candidates.stream()

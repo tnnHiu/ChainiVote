@@ -59,6 +59,15 @@ public class JwtGenerator {
         }
     }
 
+    public long getUserIdFromJWT(String token) {
+        try {
+            Jwt<?, Claims> jwt = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+            return jwt.getPayload().get("uid", Long.class);
+        } catch (JwtException ex) {
+            throw new AuthenticationCredentialsNotFoundException("Invalid JWT token", ex);
+        }
+    }
+
     public boolean validateToken(String token) {
         try {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);

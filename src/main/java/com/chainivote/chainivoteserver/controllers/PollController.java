@@ -2,7 +2,9 @@ package com.chainivote.chainivoteserver.controllers;
 
 import com.chainivote.chainivoteserver.dtos.request.PollRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.PollResponseDTO;
+import com.chainivote.chainivoteserver.security.JwtGenerator;
 import com.chainivote.chainivoteserver.services.PollService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.*;
 public class PollController {
 
     private final PollService pollService;
+    private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public PollController(PollService pollService) {
+    public PollController(PollService pollService, JwtGenerator jwtGenerator) {
         this.pollService = pollService;
+        this.jwtGenerator = jwtGenerator;
     }
 
     @GetMapping("/{pollId}")
@@ -39,6 +43,17 @@ public class PollController {
     ) {
         return pollService.getAllPollWithoutCandidate(pageable);
     }
+
+    @GetMapping("/get-all-by-user")
+    public Page<PollResponseDTO> getAllPollByUser(
+            HttpServletRequest request,
+            @PageableDefault(size = 5) Pageable pageable
+    ) {
+        String token = jwtGenerator.getJwtFromRequest(request);
+        long uid = jwtGenerator.getUserIdFromJWT(token);
+        return pollService.getAllPollByUser(uid, pageable);
+    }
+
 
     @PostMapping("/create-poll")
     public ResponseEntity<String> createPoll(
