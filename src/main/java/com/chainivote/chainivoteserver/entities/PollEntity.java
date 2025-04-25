@@ -41,7 +41,7 @@ public class PollEntity {
     private List<CandidateEntity> candidates = new ArrayList<>();
 
     @Column(unique = true, nullable = false)
-    private long chainId;
+    private String chainId;
 
     @Column(nullable = false)
     private int status;

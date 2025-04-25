@@ -18,5 +18,5 @@ public class CandidateRequestDTO {
     private String urlImage;
 
     @NotBlank(message = "chainId is required")
-    private long chainId;
+    private String chainId;
 }

@@ -41,8 +41,4 @@ public class UserController {
         String username = jwtGenerator.getUsernameFromJWT(token);
         return userService.updateWalletAddress(username, requestDTO);
     }
-
-
-
-
 }

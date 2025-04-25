@@ -11,5 +11,5 @@ public class CandidateResponseDTO {
     private String name;
     private String description;
     private String urlImage;
-    private long chainId;
+    private String chainId;
 }

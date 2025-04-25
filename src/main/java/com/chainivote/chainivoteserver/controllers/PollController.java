@@ -42,10 +42,9 @@ public class PollController {
 
     @PostMapping("/create-poll")
     public ResponseEntity<String> createPoll(
-           @Valid @RequestBody PollRequestDTO pollRequestDTO) {
+            @Valid @RequestBody PollRequestDTO pollRequestDTO) {
         return pollService.createPoll(pollRequestDTO);
     }
-
 
     // Tạo Pageable cố định: chỉ hiển thị 2 phần tử trên mỗi trang
     // PageRequest fixedPageable = PageRequest.of(0, 2); // Luôn trang 0, size = 2

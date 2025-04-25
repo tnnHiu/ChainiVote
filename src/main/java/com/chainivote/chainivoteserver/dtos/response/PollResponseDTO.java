@@ -13,7 +13,7 @@ public class PollResponseDTO {
     private String title;
     private String description;
     private String urlImage;
-    private long chainId;
+    private String chainId;
     private int status;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
