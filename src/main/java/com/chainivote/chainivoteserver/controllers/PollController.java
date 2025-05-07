@@ -27,7 +27,8 @@ public class PollController {
     }
 
     @GetMapping("/{pollId}")
-    public PollResponseDTO getPollById(@PathVariable long pollId) {
+    public PollResponseDTO getPollById(
+            @PathVariable long pollId) {
         return pollService.getPollById(pollId);
     }
 
@@ -44,6 +45,14 @@ public class PollController {
         return pollService.getAllPollWithoutCandidate(pageable);
     }
 
+    @GetMapping("/get-all-by-category/{categoryId}")
+    public Page<PollResponseDTO> getPollByCategory(
+            @PathVariable long categoryId,
+            @PageableDefault(size = 5) Pageable pageable
+    ) {
+        return pollService.getPollByCategory(categoryId, pageable);
+    }
+
     @GetMapping("/get-all-by-user")
     public Page<PollResponseDTO> getAllPollByUser(
             HttpServletRequest request,
@@ -53,7 +62,6 @@ public class PollController {
         long uid = jwtGenerator.getUserIdFromJWT(token);
         return pollService.getAllPollByUser(uid, pageable);
     }
-
 
     @PostMapping("/create-poll")
     public ResponseEntity<String> createPoll(

@@ -37,23 +37,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HttpSession httpSession) throws Exception {
-        return http.cors(cors -> cors
-                        .configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/get-all-without-candidate").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/create-poll").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/poll/{pollId}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/candidate/**").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(jwtAuthEntryPoint))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
+        return http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/").permitAll().requestMatchers("/api/auth/**").permitAll().requestMatchers(HttpMethod.GET, "/api/poll/").permitAll().requestMatchers(HttpMethod.GET, "/api/poll/get-all-without-candidate").permitAll().requestMatchers(HttpMethod.GET, "/api/poll/get-all-by-category/{categoryId}").permitAll().requestMatchers(HttpMethod.GET, "/api/poll/{pollId}").permitAll().requestMatchers(HttpMethod.GET, "/api/candidate/**").permitAll().requestMatchers(HttpMethod.GET, "/api/category/**").permitAll().anyRequest().authenticated()).addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class).exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint)).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).build();
     }
 
     @Bean

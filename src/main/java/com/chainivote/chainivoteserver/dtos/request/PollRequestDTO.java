@@ -20,6 +20,9 @@ public class PollRequestDTO {
     @NotBlank(message = "Description is required")
     private String description;
 
+    @NotNull(message = "Category id is required")
+    private long categoryId;
+
     @NotNull(message = "Creator id is required")
     private long creatorId;
 

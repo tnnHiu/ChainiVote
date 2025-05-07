@@ -12,6 +12,8 @@ public interface PollService {
 
     PollResponseDTO getPollById(long pollId);
 
+    Page<PollResponseDTO> getPollByCategory(long categoryId, Pageable pageable);
+
     Page<PollResponseDTO> getAllPoll(Pageable pageable);
 
     Page<PollResponseDTO> getAllPollWithoutCandidate(Pageable pageable);
@@ -19,5 +21,6 @@ public interface PollService {
     ResponseEntity<String> createPoll(PollRequestDTO pollRequestDTO);
 
     Page<PollResponseDTO> getAllPollByUser(long uid, Pageable pageable);
+
 
 }

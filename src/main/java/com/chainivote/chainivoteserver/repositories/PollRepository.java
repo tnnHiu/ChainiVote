@@ -12,4 +12,7 @@ import org.springframework.stereotype.Repository;
 public interface PollRepository extends JpaRepository<PollEntity, Long> {
 
     Page<PollEntity> findAllPollsByCreator_Id(long uid, Pageable pageable);
+
+    Page<PollEntity> findAllPollsByCategoryId(long categoryId, Pageable pageable);
+
 }

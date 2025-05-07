@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CandidateRepository extends JpaRepository<CandidateEntity, Long> {
 
-    Page<CandidateEntity> findAll( Pageable pageable);
-
+//    Page<CandidateEntity> findAll( Pageable pageable);
 
     @Query("SELECT c FROM CandidateEntity c JOIN FETCH c.poll WHERE c.poll.id = :pollId")
     Page<CandidateEntity> findByPollId(@Param("pollId") long pollId, Pageable pageable);

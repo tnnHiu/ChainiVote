@@ -4,9 +4,11 @@ import com.chainivote.chainivoteserver.dtos.request.PollRequestDTO;
 import com.chainivote.chainivoteserver.dtos.response.CandidateResponseDTO;
 import com.chainivote.chainivoteserver.dtos.response.PollResponseDTO;
 import com.chainivote.chainivoteserver.entities.CandidateEntity;
+import com.chainivote.chainivoteserver.entities.CategoryEntity;
 import com.chainivote.chainivoteserver.entities.PollEntity;
 import com.chainivote.chainivoteserver.entities.UserEntity;
 import com.chainivote.chainivoteserver.repositories.CandidateRepository;
+import com.chainivote.chainivoteserver.repositories.CategoryRepository;
 import com.chainivote.chainivoteserver.repositories.PollRepository;
 import com.chainivote.chainivoteserver.repositories.UserRepository;
 import com.chainivote.chainivoteserver.services.PollService;
@@ -23,16 +25,17 @@ import java.util.stream.Collectors;
 @Service
 public class PollServiceImpl implements PollService {
 
+    private final CategoryRepository categoryRepository;
     UserRepository userRepository;
     PollRepository pollRepository;
     CandidateRepository candidateRepository;
 
     @Autowired
-    public PollServiceImpl(PollRepository pollRepository, CandidateRepository candidateRepository, UserRepository userRepository) {
+    public PollServiceImpl(PollRepository pollRepository, CandidateRepository candidateRepository, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.pollRepository = pollRepository;
         this.candidateRepository = candidateRepository;
         this.userRepository = userRepository;
-
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -45,6 +48,11 @@ public class PollServiceImpl implements PollService {
     @Override
     public Page<PollResponseDTO> getAllPoll(Pageable pageable) {
         return pollRepository.findAll(pageable)
+                .map(this::mapToPollResponseDTO);
+    }
+
+    public Page<PollResponseDTO> getPollByCategory(long categoryId, Pageable pageable) {
+        return pollRepository.findAllPollsByCategoryId(categoryId, pageable)
                 .map(this::mapToPollResponseDTO);
     }
 
@@ -67,18 +75,18 @@ public class PollServiceImpl implements PollService {
 
     @Override
     public Page<PollResponseDTO> getAllPollByUser(long uid, Pageable pageable) {
-            Page<PollEntity> polls = pollRepository.findAllPollsByCreator_Id(uid, pageable);
-            return polls.map(poll -> new PollResponseDTO(
-                    poll.getId(),
-                    poll.getTitle(),
-                    poll.getDescription(),
-                    poll.getUrlImage(),
-                    poll.getChainId(),
-                    poll.getStatus(),
-                    poll.getStartTime(),
-                    poll.getEndTime(),
-                    null
-            ));
+        Page<PollEntity> polls = pollRepository.findAllPollsByCreator_Id(uid, pageable);
+        return polls.map(poll -> new PollResponseDTO(
+                poll.getId(),
+                poll.getTitle(),
+                poll.getDescription(),
+                poll.getUrlImage(),
+                poll.getChainId(),
+                poll.getStatus(),
+                poll.getStartTime(),
+                poll.getEndTime(),
+                null
+        ));
     }
 
     @Override
@@ -87,16 +95,10 @@ public class PollServiceImpl implements PollService {
 
             UserEntity creator = userRepository.findById(pollRequestDTO.getCreatorId())
                     .orElseThrow(() -> new IllegalArgumentException("Creator with id " + pollRequestDTO.getCreatorId() + " not found"));
+            CategoryEntity category = categoryRepository.findById(pollRequestDTO.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Category not found"));
 
-            PollEntity pollEntity = new PollEntity();
-            pollEntity.setTitle(pollRequestDTO.getTitle());
-            pollEntity.setDescription(pollRequestDTO.getDescription());
-            pollEntity.setCreator(creator);
-            pollEntity.setChainId(pollRequestDTO.getChainId());
-            pollEntity.setStatus(pollRequestDTO.getStatus());
-            pollEntity.setUrlImage(pollRequestDTO.getUrlImage());
-            pollEntity.setStartTime(pollRequestDTO.getStartTime());
-            pollEntity.setEndTime(pollRequestDTO.getEndTime());
+            PollEntity pollEntity = getPollEntity(pollRequestDTO, creator, category);
 
             PollEntity savedPoll = pollRepository.save(pollEntity);
 
@@ -122,6 +124,19 @@ public class PollServiceImpl implements PollService {
         }
     }
 
+    private PollEntity getPollEntity(PollRequestDTO pollRequestDTO, UserEntity creator, CategoryEntity category) {
+        PollEntity pollEntity = new PollEntity();
+        pollEntity.setTitle(pollRequestDTO.getTitle());
+        pollEntity.setDescription(pollRequestDTO.getDescription());
+        pollEntity.setCreator(creator);
+        pollEntity.setCategory(category);
+        pollEntity.setChainId(pollRequestDTO.getChainId());
+        pollEntity.setStatus(pollRequestDTO.getStatus());
+        pollEntity.setUrlImage(pollRequestDTO.getUrlImage());
+        pollEntity.setStartTime(pollRequestDTO.getStartTime());
+        pollEntity.setEndTime(pollRequestDTO.getEndTime());
+        return pollEntity;
+    }
 
     private PollResponseDTO mapToPollResponseDTO(PollEntity poll) {
         return new PollResponseDTO(
